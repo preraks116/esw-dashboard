@@ -4,6 +4,8 @@ import Plot from 'react-plotly.js';
 class App extends React.Component {
   render() {
     return (
+      <div id="ESW_Dashboard">
+        Hello World
       <Plot
         data={[
           {
@@ -16,8 +18,9 @@ class App extends React.Component {
           {type: 'line', x: [1, 2, 3], y: [2, 5, 3]},
           {type: 'line', x: [1, 2, 3], y: [2, 7, 3]},
         ]}
-        // layout={ {width: 320, height: 240, title: 'A Fancy Plot'} }
+        layout={ {width: 320, height: 240, title: 'A Fancy Plot'} }
       />
+      </div>
     );
   }
 }
