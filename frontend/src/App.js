@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
+import Graph from './Graph';
+import styles from './style.module.css';
+
 var xlist = [0];
 var ylist = [0];
 var length = 0;
@@ -14,10 +17,10 @@ function App() {
       length++;
       xlist = [...xlist, length];
 
-      if (ylist.length > 10) {
-        ylist.shift();
-        xlist.shift();
-      }
+      // if (ylist.length > 10) {
+      //   ylist.shift();
+      //   xlist.shift();
+      // }
       console.log("xlist is", xlist);
       console.log("ylist is", ylist);
       setSettings(settings => settings + 1);
@@ -28,36 +31,11 @@ function App() {
 
   return (
     <div className="App">
-      <h1>ESW DashBoard</h1>
-      <div id='graph'>
-      <Plot
-        data={[
-          {
-            x: xlist,
-            y: ylist,
-            type: 'scatter',
-            mode: 'lines+markers',
-            marker: {
-              color: 'red',
-              size: 12
-            }
-          }
-        ]}
-        layout={{
-          width: 1000,
-          height: 400,
-          autosize: true,
-          l: 0, r: 0, b: 0, t: 0, pad: 0,
-          showlegend: false,
-          paper_bgcolor: 'rgba(0,0,0,0)',
-          plot_bgcolor: 'rgba(0,0,0,0)',
-          xaxis: {
-            uirevision: 'time',
-          },
-          yaxis: {
-            uirevision: 'time',
-          },
-        }}
+      <h1 className={styles.bigblue}>ESW DashBoard</h1>
+      <div id='graph' className={styles.graph}>
+      <Graph
+        xlist={xlist}
+        ylist={ylist}
       />
       </div>
     </div>

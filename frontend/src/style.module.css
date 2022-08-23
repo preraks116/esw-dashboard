@@ -1,0 +1,13 @@
+.bigblue {
+    color: DodgerBlue;
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+.graph {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    /* height:100vh;    */
+}
