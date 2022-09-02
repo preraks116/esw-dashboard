@@ -2,6 +2,7 @@ import React, { useState, useEffect, startTransition } from 'react';
 import Graph from './Graph';
 import styles from './style.module.css';
 import axios from 'axios';
+import pic from './img/feed.jpg'
 // make data cl
 const channelid = "1848239";
 const readAPIKey = "XVYQYXZQYXZQYXZQ";
@@ -89,10 +90,10 @@ function addStats(data, field) {
     stats.rps.val = [...stats.rps.val, data];
     stats.rps.xlist = [...stats.rps.xlist, stats.rps.val.length];
     const rpslength = stats.rps.val.length;
-    console.log("rpslength is", rpslength);
-    console.log("sum of all elements in the array is",stats.rps.val.reduce((a, b) => a + b));
+    // console.log("rpslength is", rpslength);
+    // console.log("sum of all elements in the array is",stats.rps.val.reduce((a, b) => a + b));
     const mean = stats.rps.val.reduce((a, b) => a + b) / stats.rps.val.length;
-    console.log("mean is", mean);
+    // console.log("mean is", mean);
     const median = stats.rps.val[Math.floor(rpslength / 2)];
     const std = Math.sqrt(stats.rps.val.reduce((a, b) => a + Math.pow(b - mean, 2)) / rpslength);
     stats.rps.measure = {
@@ -176,48 +177,60 @@ function App() {
   return (
     <div className="App">
       <h1 className={styles.bigblue}>ESW DashBoard</h1>
-      <div id='graphrps' className={styles.graph}>
-        <Graph
-          xlist={stats.rps.xlist}
-          ylist={stats.rps.val}
-          title='RPM'
-        />
-        <div className={styles.stats}>
-          <ul>
-            <li>Mean: {stats.rps.measure.mean.toFixed(2)}</li>
-            <li>Median: {stats.rps.measure.median.toFixed(2)}</li>
-            <li>Std: {stats.rps.measure.std.toFixed(2)}</li>
-          </ul>
+      <div className={styles.graphs}>
+        <div id='graphrps' className={styles.graph}>
+          <Graph
+            xlist={stats.rps.xlist}
+            ylist={stats.rps.val}
+            width={1000}
+            height={350}
+            title='RPM'
+          />
+          <div className={styles.stats}>
+            <ul>
+              <li>Mean: {stats.rps.measure.mean.toFixed(2)}</li>
+              <li>Median: {stats.rps.measure.median.toFixed(2)}</li>
+              <li>Std: {stats.rps.measure.std.toFixed(2)}</li>
+            </ul>
+          </div>
         </div>
-      </div>
-      <div id='graphvolt' className={styles.graph}>
-        <Graph
-          xlist={stats.voltage.xlist}
-          ylist={stats.voltage.val}
-          title='Voltage'
-        />
-        <div className={styles.stats}>
-          <ul>
-            <li>Mean: {stats.voltage.measure.mean.toFixed(2)}</li>
-            <li>Median: {stats.voltage.measure.median.toFixed(2)}</li>
-            <li>Std: {stats.voltage.measure.std.toFixed(2)}</li>
-          </ul>
+        <div id='graphvolt' className={styles.graph}>
+          <Graph
+            xlist={stats.voltage.xlist}
+            ylist={stats.voltage.val}
+            width={1000}
+            height={350}
+            title='Voltage'
+          />
+          <div className={styles.stats}>
+            <ul>
+              <li>Mean: {stats.voltage.measure.mean.toFixed(2)}</li>
+              <li>Median: {stats.voltage.measure.median.toFixed(2)}</li>
+              <li>Std: {stats.voltage.measure.std.toFixed(2)}</li>
+            </ul>
+          </div>
         </div>
+        
       </div>
-      <div id='graphdutyCycle' className={styles.graph}>
-        <Graph
-          xlist={stats.dutyCycle.xlist}
-          ylist={stats.dutyCycle.val}
-          title='dutyCycle'
-        />
-        <div className={styles.stats}>
-          <ul>
-            <li>Mean: {stats.dutyCycle.measure.mean.toFixed(2)}</li>
-            <li>Median: {stats.dutyCycle.measure.median.toFixed(2)}</li>
-            <li>Std: {stats.dutyCycle.measure.std.toFixed(2)}</li>
-          </ul>
+      <div id='graphdutyCycle' className={styles.graph2}>
+          <Graph
+            xlist={stats.dutyCycle.xlist}
+            ylist={stats.dutyCycle.val}
+            width={950}
+            height={352}
+            title='dutyCycle'
+          />
+          <div className={styles.stats2}>
+            <ul>
+              <li>Mean: {stats.dutyCycle.measure.mean.toFixed(2)}</li>
+              <li>Median: {stats.dutyCycle.measure.median.toFixed(2)}</li>
+              <li>Std: {stats.dutyCycle.measure.std.toFixed(2)}</li>
+            </ul>
+          </div>
         </div>
-      </div>
+        <div id='camfeed' className={styles.img}>
+          <img alt='h' src={pic}></img>
+        </div>
     </div>
 
   );
