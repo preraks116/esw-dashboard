@@ -23,7 +23,7 @@ void setup() {
   ledcAttachPin(enable1Pin, pwmChannel);
 
   Serial.begin(115200);
-
+  connectWifi();
   // testing
   Serial.print("Testing DC Motor...");
 }
