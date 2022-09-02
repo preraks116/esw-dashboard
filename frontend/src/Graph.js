@@ -18,7 +18,7 @@ function Graph(props) {
         ]}
         layout={{
           width: 1000,
-          height: 400,
+          height: 360,
           autosize: true,
           l: 0, r: 0, b: 0, t: 0, pad: 0,   
           showlegend: false,
@@ -35,16 +35,36 @@ function Graph(props) {
           },
           yaxis: {
             uirevision: 'time',
-            title: 'RPM',
+            title: props.title,
           },
           title: {
-            text: 'RPM',
+            text: props.title,
             font: {
                 color: '#ffffff',
                 family: 'Courier New',
                 size: 24
             }
           },
+          // sliders: [{
+          //   pad: {t: 50},
+          //   currentvalue: {
+          //     visible: true,
+          //     prefix: 'Time: ',
+          //     xanchor: 'right',
+          //     font: {
+          //       color: '#ffffff',
+          //       size: 20
+          //     }
+          //   },
+          //   steps: [{
+          //     method: 'animate',
+          //     args: [[props.title], {
+          //       mode: 'immediate',
+          //       transition: {duration: 0},
+          //       frame: {duration: 0, redraw: false},
+          //     }],
+          //   }],
+          // }]
         }}
       />
   );
