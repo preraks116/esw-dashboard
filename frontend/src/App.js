@@ -2,7 +2,8 @@ import React, { useState, useEffect, startTransition } from 'react';
 import Graph from './Graph';
 import styles from './style.module.css';
 import axios from 'axios';
-import pic from './img/feed.jpg'
+import { Col, Row } from 'antd';
+import Grid from '@mui/material/Grid'
 // make data cl
 const channelid = "1825191";
 const readAPIKey = "XVYQYXZQYXZQYXZQ";
@@ -178,59 +179,75 @@ function App() {
     <div className="App">
       <h1 className={styles.bigblue}>ESW DashBoard</h1>
       <div className={styles.graphs}>
-        <div id='graphrps' className={styles.graph}>
-          <Graph
-            xlist={stats.rps.xlist}
-            ylist={stats.rps.val}
-            width={1000}
-            height={350}
-            title='RPM'
-          />
-          <div className={styles.stats}>
-            <ul>
-              <li>Mean: {stats.rps.measure.mean.toFixed(2)}</li>
-              <li>Median: {stats.rps.measure.median.toFixed(2)}</li>
-              <li>Std: {stats.rps.measure.std.toFixed(2)}</li>
-            </ul>
+      <Grid container spacing={2} alignItems="stretch">
+        <Grid item style={{height:'50%', width:'100%'}} xs={6}>
+          <div id='graphrps' className={styles.graphrps}>
+            <Graph
+              xlist={stats.rps.xlist}
+              ylist={stats.rps.val}
+              width={1000}
+              height={350}
+              title='RPM'
+            />
+            <div className={styles.stats}>
+              <ul>
+                <li>Mean: {stats.rps.measure.mean.toFixed(2)}</li>
+                <li>Median: {stats.rps.measure.median.toFixed(2)}</li>
+                <li>Std: {stats.rps.measure.std.toFixed(2)}</li>
+              </ul>
+            </div>
           </div>
-        </div>
-        <div id='graphvolt' className={styles.graph}>
-          <Graph
-            xlist={stats.voltage.xlist}
-            ylist={stats.voltage.val}
-            width={1000}
-            height={350}
-            title='Voltage'
-          />
-          <div className={styles.stats}>
-            <ul>
-              <li>Mean: {stats.voltage.measure.mean.toFixed(2)}</li>
-              <li>Median: {stats.voltage.measure.median.toFixed(2)}</li>
-              <li>Std: {stats.voltage.measure.std.toFixed(2)}</li>
-            </ul>
+        </Grid>
+        <Grid item style={{height:'50%', width:'100%'}}xs={6}>
+          <div id='graphvolt' className={styles.graphvolt}>
+            <Graph
+              xlist={stats.voltage.xlist}
+              ylist={stats.voltage.val}
+              width={1000}
+              height={350}
+              title='Voltage'
+            />
+            <div className={styles.stats}>
+              <ul>
+                <li>Mean: {stats.voltage.measure.mean.toFixed(2)}</li>
+                <li>Median: {stats.voltage.measure.median.toFixed(2)}</li>
+                <li>Std: {stats.voltage.measure.std.toFixed(2)}</li>
+              </ul>
+            </div>
           </div>
-        </div>
-        
+        </Grid>
+        <Grid item  style={{height:'50%', width:'50%'}}xs={6}>
+          <div id='graphdutyCycle' className={styles.graphdutyCycle}>
+            <Graph
+              xlist={stats.dutyCycle.xlist}
+              ylist={stats.dutyCycle.val}
+              width={950}
+              height={352}
+              title='dutyCycle'
+            />
+            <div className={styles.stats2}>
+              <ul>
+                <li>Mean: {stats.dutyCycle.measure.mean.toFixed(2)}</li>
+                <li>Median: {stats.dutyCycle.measure.median.toFixed(2)}</li>
+                <li>Std: {stats.dutyCycle.measure.std.toFixed(2)}</li>
+              </ul>
+            </div>
+          </div>
+        </Grid>
+        <Grid item style={{height:'50%', width:'100%'}}xs={6}>
+          <div id='camfeed' className={styles.img}>
+            <img alt='Camera Not Connected' src={'http://10.42.0.124:81/stream'}></img>
+
+          </div>
+        </Grid>
+      </Grid>
+
+      
+
+
+
+
       </div>
-      <div id='graphdutyCycle' className={styles.graph2}>
-          <Graph
-            xlist={stats.dutyCycle.xlist}
-            ylist={stats.dutyCycle.val}
-            width={950}
-            height={352}
-            title='dutyCycle'
-          />
-          <div className={styles.stats2}>
-            <ul>
-              <li>Mean: {stats.dutyCycle.measure.mean.toFixed(2)}</li>
-              <li>Median: {stats.dutyCycle.measure.median.toFixed(2)}</li>
-              <li>Std: {stats.dutyCycle.measure.std.toFixed(2)}</li>
-            </ul>
-          </div>
-        </div>
-        <div id='camfeed' className={styles.img}>
-          <img alt='Camera Not Connected' src={'http://10.42.0.124:81/stream'}></img>
-        </div>
     </div>
 
   );

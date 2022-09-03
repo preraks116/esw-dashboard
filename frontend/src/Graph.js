@@ -21,9 +21,8 @@ function Graph(props) {
           }
         ]}
         layout={{
-
-          width: props.width,
-          height: props.height,
+          width: undefined,
+          height: undefined,
           autosize: true,
           // dragmode: 'select',
           l: 0, r: 0, b: 0, t: 0, pad: 0,   
@@ -52,6 +51,8 @@ function Graph(props) {
             }
           },
         }}
+        useResizeHandler={true}
+        style={{ width: "100%", height: "100%" }}
         onSelected={(event) => {
           // console.log(event);
           let x = [];

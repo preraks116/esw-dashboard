@@ -37,12 +37,19 @@
 }
 
 .img {
-    position: absolute;
+    /* position: absolute;
     color: #ffffff;
     top: 500px;
     right: 0px;
     max-width: 50%;
     max-height: 45%;
+    border: 1px solid #ffffff;
+    border-radius: 60px;
+    float: left;
+    margin-bottom: 10px; */
+    width: 100%;
+    height: 100%;
+    background-color: black;
     border: 1px solid #ffffff;
     border-radius: 60px;
     float: left;
@@ -52,12 +59,38 @@
 .img img {
     /* width: 90%; */
     /* height: 90%; */
-    width: 950px;
-    height: 420px;
+    height : 50vh;
     object-fit: cover;
     border-radius: 60px;
 }
 
+.graphrps{
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    border: 1px solid #ffffff;
+    border-radius: 60px;
+    float: left;
+    margin-bottom: 10px;
+}
+.graphvolt{
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    border: 1px solid #ffffff;
+    border-radius: 60px;
+    float: left;
+    margin-bottom: 10px;
+}
+.graphdutyCycle{
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    border: 1px solid #ffffff;
+    border-radius: 60px;
+    float: left;
+    margin-bottom: 10px;
+}
 .stats2 {
     margin-bottom: 10px;
     padding-left: 80px;
