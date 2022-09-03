@@ -4,7 +4,7 @@ import styles from './style.module.css';
 import axios from 'axios';
 import pic from './img/feed.jpg'
 // make data cl
-const channelid = "1848239";
+const channelid = "1825191";
 const readAPIKey = "XVYQYXZQYXZQYXZQ";
 const stats = {
   lastTime: "",
@@ -229,7 +229,7 @@ function App() {
           </div>
         </div>
         <div id='camfeed' className={styles.img}>
-          <img alt='h' src={pic}></img>
+          <img alt='Camera Not Connected' src={'http://10.42.0.124:81/stream'}></img>
         </div>
     </div>
 

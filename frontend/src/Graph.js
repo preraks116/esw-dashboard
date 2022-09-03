@@ -25,7 +25,7 @@ function Graph(props) {
           width: props.width,
           height: props.height,
           autosize: true,
-          dragmode: 'select',
+          // dragmode: 'select',
           l: 0, r: 0, b: 0, t: 0, pad: 0,   
           showlegend: false,
           font: {
