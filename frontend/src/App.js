@@ -161,17 +161,17 @@ function App() {
   }, []);
 
 
-  useEffect(() => {
-    setInterval(() => {
-      addValue(rpm);
-      getStats(rpm);
-      // add random value between -2 and 2 to voltage
-      getStats(voltage);
-      // console.log(voltage);
-      // console.log(voltageValue)
-      setSettings(settings => settings + 1);
-    }, 1000);
-  }, []);
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     addValue(rpm);
+  //     getStats(rpm);
+  //     // add random value between -2 and 2 to voltage
+  //     getStats(voltage);
+  //     // console.log(voltage);
+  //     // console.log(voltageValue)
+  //     setSettings(settings => settings + 1);
+  //   }, 1000);
+  // }, []);
 
 
 
@@ -236,7 +236,7 @@ function App() {
         </Grid>
         <Grid item style={{height:'50%', width:'100%'}}xs={6}>
           <div id='camfeed' className={styles.img}>
-            <img alt='Camera Not Connected' src={'http://10.42.0.124:81/stream'}></img>
+            <img alt='Camera Not Connected' src={'http://192.168.56.2:81/stream'}></img>
 
           </div>
         </Grid>
