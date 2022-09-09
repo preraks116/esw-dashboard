@@ -1,7 +1,8 @@
 .bigblue {
-    color: DodgerBlue;
+    color: black;
     font-family: 'Courier New', Courier, monospace;
-    text-align: center;
+    /* text-align: center; */
+    padding-left: 1.5%;
 }
 
 .graphs {
@@ -10,6 +11,7 @@
     /* justify-content: space-around; */
     align-items: center;
     flex-wrap: wrap;
+    padding: 2rem;
 }
 
 .graph {
@@ -20,8 +22,7 @@
     max-width: 50%;
     background-color: black;
     border: 1px solid #ffffff;
-    border-radius: 60px;
-    float: left;
+    border-radius: 10px;
     margin-bottom: 10px;
 }
 
@@ -31,8 +32,7 @@
     right: 1px;
     max-width: 50%;
     border: 1px solid #ffffff;
-    border-radius: 60px;
-    float: left;
+    border-radius: 10px;
     margin-bottom: 10px;
 }
 
@@ -44,15 +44,14 @@
     max-width: 50%;
     max-height: 45%;
     border: 1px solid #ffffff;
-    border-radius: 60px;
+    border-radius: 10px;
     float: left;
     margin-bottom: 10px; */
     width: 100%;
     height: 100%;
     background-color: black;
     border: 1px solid #ffffff;
-    border-radius: 60px;
-    float: left;
+    border-radius: 10px;
     margin-bottom: 10px;
 }
 
@@ -61,7 +60,7 @@
     /* height: 90%; */
     height : 50vh;
     object-fit: cover;
-    border-radius: 60px;
+    border-radius: 10px;
 }
 
 .graphrps{
@@ -69,17 +68,16 @@
     height: 100%;
     background-color: black;
     border: 1px solid #ffffff;
-    border-radius: 60px;
-    float: left;
+    min-height: 533px;
+    border-radius: 10px;
     margin-bottom: 10px;
 }
 .graphvolt{
     width: 100%;
     height: 100%;
     background-color: black;
-    border: 1px solid #ffffff;
-    border-radius: 60px;
-    float: left;
+    align-items: center;
+    border-radius: 10px;
     margin-bottom: 10px;
 }
 .graphdutyCycle{
@@ -87,8 +85,7 @@
     height: 100%;
     background-color: black;
     border: 1px solid #ffffff;
-    border-radius: 60px;
-    float: left;
+    border-radius: 10px;
     margin-bottom: 10px;
 }
 .stats2 {
@@ -104,12 +101,13 @@
 
 
 .stats {
-    margin-bottom: 10px;
     color: white;
+    text-align: center;
+    padding: 5px;
 }
 
 .stats li {
-    display: inline;
-    padding: 0 70px;
+    display: inline; 
+    padding: 20px 25px;
 }
 
