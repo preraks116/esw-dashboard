@@ -7,8 +7,13 @@ import axios from "axios";
 import { Col, Row } from "antd";
 import Slider from "@mui/material/Slider";
 import { Button } from "@mui/material";
-import BoltIcon from '@mui/icons-material/Bolt';
+import BoltIcon from "@mui/icons-material/Bolt";
+import Typography from "@mui/material/Typography";
+// import Button from '@mui/material/Button';
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Toolbar from "@mui/material/Toolbar";
 import MuiInput from "@mui/material/Input";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -221,10 +226,13 @@ function App() {
     <div className="App">
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
-          <h1 className={styles.bigblue}>ESW DashBoard</h1>
-          {/* <Button variant="outlined" startIcon={<DeleteIcon />} style={{color: "black"}}>
-            Delete
-          </Button> */}
+          <Toolbar>
+            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }} fontFamily="Courier New">
+              ESW DashBoard
+            </Typography>
+            <Button color="inherit">Plots</Button>
+            <Button color="inherit">Specs</Button>
+          </Toolbar>
         </AppBar>
       </Box>
       <div className={styles.graphs}>
@@ -236,10 +244,7 @@ function App() {
                 ylist={stats.rps.val}
                 title="RPM"
               />
-              <Stats 
-                stat={stats.rps} 
-                style={styles.stats}
-              />
+              <Stats stat={stats.rps} style={styles.stats} />
             </div>
           </Grid>
           <Grid item style={{ height: "40%" }} xs={6}>
@@ -257,13 +262,19 @@ function App() {
                 ylist={stats.voltage.val}
                 title="Voltage"
               />
-              <Grid container spacing={2} alignItems="center" width="50%" style={{margin: "auto"}}>    
+              <Grid
+                container
+                spacing={2}
+                alignItems="center"
+                width="50%"
+                style={{ margin: "auto" }}
+              >
                 <Grid item>
-                  <BoltIcon style={{color: "white", padding: "auto", }}/>
+                  <BoltIcon style={{ color: "white", padding: "auto" }} />
                 </Grid>
                 <Grid item xs>
                   <Slider
-                    style={{alignContent: "center"}}
+                    style={{ alignContent: "center" }}
                     value={typeof value === "number" ? value : 0}
                     onChange={handleSliderChange}
                     aria-labelledby="input-slider"
@@ -271,7 +282,11 @@ function App() {
                 </Grid>
                 <Grid item>
                   <Input
-                    style={{backgroundColor: "black", textAlign: "center", color: "white"}}
+                    style={{
+                      backgroundColor: "black",
+                      textAlign: "center",
+                      color: "white",
+                    }}
                     value={value}
                     size="small"
                     onChange={handleInputChange}
@@ -286,10 +301,7 @@ function App() {
                   />
                 </Grid>
               </Grid>
-              <Stats 
-                stat={stats.voltage}
-                style={styles.stats} 
-              />
+              <Stats stat={stats.voltage} style={styles.stats} />
             </div>
           </Grid>
           <Grid item style={{ height: "40%" }} xs={6}>
@@ -299,10 +311,7 @@ function App() {
                 ylist={stats.dutyCycle.val}
                 title="dutyCycle"
               />
-              <Stats 
-                stat={stats.dutyCycle}
-                style={styles.dutyStats} 
-              />
+              <Stats stat={stats.dutyCycle} style={styles.dutyStats} />
             </div>
           </Grid>
         </Grid>
