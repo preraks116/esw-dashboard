@@ -252,6 +252,7 @@ function App() {
               <img
                 alt="Camera Not Connected"
                 src={"http://192.168.145.2:81/stream"}
+                style={{ width: "50%", height: "50%" }}
               ></img>
             </div>
           </Grid>
