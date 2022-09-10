@@ -11,6 +11,7 @@ const int freq = 30000;
 const int pwmChannel = 0;
 const int resolution = 8;
 int dutyCycle = 200;
+float vv = 4.9;
 
 char* ssid = "Harsh";
 char* pwd = "rudranshpratapsingh";
@@ -139,9 +140,12 @@ void loop() {
     }
     Serial.println("\nConnected.");
   }
-
-  float voltage = ThingSpeak.readFloatField(myChannelNumber,4,myReadAPIKey);
-  dutyCycle = 255*voltage/7;
+  vv=vv+ 0.1;
+  if(vv > 7){
+    vv = 4.9;
+  }
+  // float voltage = ThingSpeak.readFloatField(myChannelNumber,4,myReadAPIKey);
+  // dutyCycle = 255*voltage/7;
   
   digitalWrite(motor1Pin1, HIGH);
   digitalWrite(motor1Pin2, LOW);
