@@ -3,7 +3,7 @@ import styles from "./style.module.css";
 function Stats(props) {
     return (
         <>
-            <div className={styles.stats}>
+            <div className={props.style}>
                 <ul>
                     {/* <li>Mean: {stats.voltage.measure.mean.toFixed(2)}</li>
                     <li>Median: {stats.voltage.measure.median.toFixed(2)}</li>

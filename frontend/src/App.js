@@ -229,17 +229,28 @@ function App() {
       </Box>
       <div className={styles.graphs}>
         <Grid container spacing={2}>
-          <Grid item style={{ height: "100%" }} xs={6}>
+          <Grid item style={{ height: "40%" }} xs={6}>
             <div id="graphrps" className={styles.graphrps}>
               <Graph
                 xlist={stats.rps.xlist}
                 ylist={stats.rps.val}
                 title="RPM"
               />
-              <Stats stat={stats.rps} />
+              <Stats 
+                stat={stats.rps} 
+                style={styles.stats}
+              />
             </div>
           </Grid>
-          <Grid item style={{ height: "50%" }} xs={6}>
+          <Grid item style={{ height: "40%" }} xs={6}>
+            <div id="camfeed" className={styles.img}>
+              <img
+                alt="Camera Not Connected"
+                src={"http://192.168.56.2:81/stream"}
+              ></img>
+            </div>
+          </Grid>
+          <Grid item style={{ height: "40%" }} xs={6}>
             <div id="graphvolt" className={styles.graphvolt}>
               <Graph
                 xlist={stats.voltage.xlist}
@@ -275,25 +286,23 @@ function App() {
                   />
                 </Grid>
               </Grid>
-              <Stats stat={stats.voltage} />
+              <Stats 
+                stat={stats.voltage}
+                style={styles.stats} 
+              />
             </div>
           </Grid>
-          <Grid item style={{ height: "50%" }} xs={6}>
+          <Grid item style={{ height: "40%" }} xs={6}>
             <div id="graphdutyCycle" className={styles.graphdutyCycle}>
               <Graph
                 xlist={stats.dutyCycle.xlist}
                 ylist={stats.dutyCycle.val}
                 title="dutyCycle"
               />
-              <Stats stat={stats.dutyCycle} />
-            </div>
-          </Grid>
-          <Grid item style={{ height: "50%" }} xs={6}>
-            <div id="camfeed" className={styles.img}>
-              <img
-                alt="Camera Not Connected"
-                src={"http://192.168.56.2:81/stream"}
-              ></img>
+              <Stats 
+                stat={stats.dutyCycle}
+                style={styles.dutyStats} 
+              />
             </div>
           </Grid>
         </Grid>
