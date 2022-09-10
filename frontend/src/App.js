@@ -292,7 +292,7 @@ function App() {
             <div id="camfeed" className={styles.img}>
               <img
                 alt="Camera Not Connected"
-                src={"http://192.168.56.2:81/stream"}
+                src={"http://vegi.loca.lt/stream"}
               ></img>
             </div>
           </Grid>
