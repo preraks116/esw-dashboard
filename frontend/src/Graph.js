@@ -40,7 +40,7 @@ function Graph(props) {
           },
           yaxis: {
             uirevision: 'time',
-            title: props.title + '2',
+            title: props.title,
           },
           title: {
             text: `${props.title} <br> ${title}`,

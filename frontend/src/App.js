@@ -207,6 +207,7 @@ function App() {
         .catch((err) => {
           console.log(err);
         });
+            setSettings(settings => settings + 1);
     }, 1000);
   }, []);
 
@@ -218,7 +219,6 @@ function App() {
   //     getStats(voltage);
   //     // console.log(voltage);
   //     // console.log(voltageValue)
-  //     setSettings(settings => settings + 1);
   //   }, 1000);
   // }, []);
 
@@ -260,7 +260,7 @@ function App() {
               <Graph
                 xlist={stats.voltage.xlist}
                 ylist={stats.voltage.val}
-                title="Voltage"
+                title="Current"
               />
               <Grid
                 container

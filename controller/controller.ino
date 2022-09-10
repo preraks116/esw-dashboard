@@ -145,7 +145,7 @@ void loop() {
     vv = 4.9;
   }
   // float voltage = ThingSpeak.readFloatField(myChannelNumber,4,myReadAPIKey);
-  // dutyCycle = 255*voltage/7;
+   dutyCycle = 255*vv/7;
   
   digitalWrite(motor1Pin1, HIGH);
   digitalWrite(motor1Pin2, LOW);
