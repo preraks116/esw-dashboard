@@ -6,6 +6,8 @@ import styles from "../components/style.module.css";
 import axios from "axios";
 import { Col, Row } from "antd";
 import Slider from "@mui/material/Slider";
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
 import { Button } from "@mui/material";
 import BoltIcon from '@mui/icons-material/Bolt';
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -240,7 +242,14 @@ function DashBoard() {
     <div className="App">
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
-          <h1 className={styles.bigblue}>ESW DashBoard</h1>
+          <Toolbar>
+            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }} fontFamily="Courier New">
+              ESW DashBoard
+            </Typography>
+            <Button color="inherit" onClick={() => {}}>Plots</Button>
+            <Button color="inherit" onClick={() => {window.location.href = "/specs"}}>Specs</Button>
+          </Toolbar>
+          {/* <h1 className={styles.bigblue}>ESW DashBoard</h1> */}
           {/* <Button variant="outlined" startIcon={<DeleteIcon />} style={{color: "black"}}>
             Delete
           </Button> */}

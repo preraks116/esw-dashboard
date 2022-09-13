@@ -11,6 +11,7 @@ import io from "socket.io-client";
 import DashBoard from "./pages/Dashboard";
 import ErrorPage from "./pages/ErrorPage";
 import TestingPage from "./pages/testingpage";
+import Specs from "./pages/Specs";
 const Final = () => {
 
 
@@ -24,6 +25,7 @@ const Final = () => {
                     }
                 >
                 </Route>
+                <Route path="/specs" element={<Specs />}></Route>
                 <Route path="/error" element={<ErrorPage />}>
                 </Route>
             </Routes>
