@@ -62,6 +62,9 @@
     height : 50vh;
     object-fit: cover;
     border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .graphrps{

@@ -267,8 +267,9 @@ function DashBoard() {
           <Grid item style={{ height: "40%" }} xs={6}>
             <div id="camfeed" className={styles.img}>
               <img
-                alt="logo512.png"
+                alt={"Camera not Connected"}
                 src={"http://192.168.56.2:81/stream"}
+                style={{ width: "50%", height: "50%" }}
               ></img>
             </div>
           </Grid>
@@ -277,7 +278,7 @@ function DashBoard() {
               <Graph
                 xlist={stats.voltage.xlist}
                 ylist={stats.voltage.val}
-                title="Voltage"
+                title="Current"
               />
               <Grid
                 container
@@ -326,7 +327,7 @@ function DashBoard() {
               <Graph
                 xlist={stats.dutyCycle.xlist}
                 ylist={stats.dutyCycle.val}
-                title="dutyCycle"
+                title="Duty Cycle"
               />
               <Stats stat={stats.dutyCycle} style={styles.dutyStats} />
             </div>
