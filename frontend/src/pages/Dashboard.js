@@ -1,8 +1,8 @@
-import React, { useState, useEffect, startTransition } from "react";
+import React, { useState, useEffect,useRef, startTransition } from "react";
 import { styled } from "@mui/material/styles";
-import Graph from "./Graph";
-import Stats from "./Stats";
-import styles from "./style.module.css";
+import Graph from "../components/Graph";
+import Stats from "../components/Stats";
+import styles from "../components/style.module.css";
 import axios from "axios";
 import { Col, Row } from "antd";
 import Slider from "@mui/material/Slider";
@@ -13,6 +13,7 @@ import MuiInput from "@mui/material/Input";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
+import io from "socket.io-client";
 
 const Input = styled(MuiInput)`
   width: 42px;
@@ -130,7 +131,7 @@ function addStats(data, field) {
     const median = stats.voltage.val[Math.floor(voltagelength / 2)];
     const std = Math.sqrt(
       stats.voltage.val.reduce((a, b) => a + Math.pow(b - mean, 2)) /
-        voltagelength
+      voltagelength
     );
     stats.voltage.measure = {
       mean: mean,
@@ -150,7 +151,7 @@ function addStats(data, field) {
     const median = stats.dutyCycle.val[Math.floor(dutyCyclelength / 2)];
     const std = Math.sqrt(
       stats.dutyCycle.val.reduce((a, b) => a + Math.pow(b - mean, 2)) /
-        dutyCyclelength
+      dutyCyclelength
     );
     stats.dutyCycle.measure = {
       mean: mean,
@@ -159,8 +160,24 @@ function addStats(data, field) {
     };
   }
 }
+const socket = io("http://localhost:3001");
+console.log("socket is", socket);
 
-function App() {
+function DashBoard() {
+  useEffect(() => {
+    setTimeout(() => {
+      console.log("checking connection socket")
+      if(socket.connected){
+        console.log("socket is connected");
+      }
+      else{
+        console.log("socket not connected");
+        window.location.href = "/error";
+      }
+    }, 2000);
+  }, []);
+
+
   const [settings, setSettings] = useState(0);
   const [voltageValue, setVoltage] = useState(5);
 
@@ -192,6 +209,8 @@ function App() {
           const voltage = Number(res.data.field2);
           const dutyCycle = Number(res.data.field3);
           const lastTime = res.data.created_at;
+          console.log("rpm",rpm);
+          console.log("voltage",voltage);
           if (lastTime !== stats.lastTime) {
             addStats(rpm, "rps");
             addStats(voltage, "voltage");
@@ -202,6 +221,7 @@ function App() {
         .catch((err) => {
           console.log(err);
         });
+            setSettings(settings => settings + 1);
     }, 1000);
   }, []);
 
@@ -213,7 +233,6 @@ function App() {
   //     getStats(voltage);
   //     // console.log(voltage);
   //     // console.log(voltageValue)
-  //     setSettings(settings => settings + 1);
   //   }, 1000);
   // }, []);
 
@@ -246,13 +265,13 @@ function App() {
                 ylist={stats.voltage.val}
                 title="Voltage"
               />
-              <Grid container spacing={2} alignItems="center" width="50%" style={{margin: "auto"}}>    
+              <Grid container spacing={2} alignItems="center" width="50%" style={{ margin: "auto" }}>
                 <Grid item>
-                  <BoltIcon style={{color: "white", padding: "auto", }}/>
+                  <BoltIcon style={{ color: "white", padding: "auto", }} />
                 </Grid>
                 <Grid item xs>
                   <Slider
-                    style={{alignContent: "center"}}
+                    style={{ alignContent: "center" }}
                     value={typeof value === "number" ? value : 0}
                     onChange={handleSliderChange}
                     aria-labelledby="input-slider"
@@ -260,7 +279,7 @@ function App() {
                 </Grid>
                 <Grid item>
                   <Input
-                    style={{backgroundColor: "black", textAlign: "center", color: "white"}}
+                    style={{ backgroundColor: "black", textAlign: "center", color: "white" }}
                     value={value}
                     size="small"
                     onChange={handleInputChange}
@@ -290,10 +309,10 @@ function App() {
           </Grid>
           <Grid item style={{ height: "50%" }} xs={6}>
             <div id="camfeed" className={styles.img}>
-              <img
-                alt="Camera Not Connected"
-                src={"http://192.168.56.2:81/stream"}
-              ></img>
+              <img 
+              src = "http://hard-mule-16.loca.lt/stream"
+              alt = "Camera Feed"
+              />
             </div>
           </Grid>
         </Grid>
@@ -302,4 +321,4 @@ function App() {
   );
 }
 
-export default App;
+export default DashBoard;
