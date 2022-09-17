@@ -1,48 +1,53 @@
+
+#include "WiFi.h"
 #include "esp_camera.h"
-#include <WiFi.h>
 
-//
-// WARNING!!! PSRAM IC required for UXGA resolution and high JPEG quality
-//            Ensure ESP32 Wrover Module or other board with PSRAM is selected
-//            Partial images will be transmitted if image exceeds buffer size
-//
-//            You must select partition scheme from the board menu that has at least 3MB APP space.
-//            Face Recognition is DISABLED for ESP32 and ESP32-S2, because it takes up from 15 
-//            seconds to process single frame. Face Detection is ENABLED if PSRAM is enabled as well
+#include "SocketIOclientMod.hpp"
+#include <ArduinoJson.h>
 
-// ===================
-// Select camera model
-// ===================
-//#define CAMERA_MODEL_WROVER_KIT // Has PSRAM
-//#define CAMERA_MODEL_ESP_EYE // Has PSRAM
-//#define CAMERA_MODEL_ESP32S3_EYE // Has PSRAM
-//#define CAMERA_MODEL_M5STACK_PSRAM // Has PSRAM
-//#define CAMERA_MODEL_M5STACK_V2_PSRAM // M5Camera version B Has PSRAM
-//#define CAMERA_MODEL_M5STACK_WIDE // Has PSRAM
-//#define CAMERA_MODEL_M5STACK_ESP32CAM // No PSRAM
-//#define CAMERA_MODEL_M5STACK_UNITCAM // No PSRAM
 #define CAMERA_MODEL_AI_THINKER // Has PSRAM
-//#define CAMERA_MODEL_TTGO_T_JOURNAL // No PSRAM
-// ** Espressif Internal Boards **
-//#define CAMERA_MODEL_ESP32_CAM_BOARD
-//#define CAMERA_MODEL_ESP32S2_CAM_BOARD
-//#define CAMERA_MODEL_ESP32S3_CAM_LCD
 
 #include "camera_pins.h"
-
-// ===========================
-// Enter your WiFi credentials
-// ===========================
+#define USE_SERIAL Serial
+// Replace with your network credentials
+const char* hostname = "ESP32CAM";
 const char* ssid = "Harsh";
 const char* password = "rudranshpratapsingh";
 
-void startCameraServer();
 
-void setup() {
-  Serial.begin(115200);
-  Serial.setDebugOutput(true);
-  Serial.println();
+SocketIOclientMod socketIO;
 
+void socketIOEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) {
+    switch(type) {
+        case sIOtype_DISCONNECT:
+            USE_SERIAL.printf("[IOc] Disconnected!\n");
+            break;
+        case sIOtype_CONNECT:
+            USE_SERIAL.printf("[IOc] Connected to url: %s\n", payload);
+
+            // join default namespace (no auto join in Socket.IO V3)
+            socketIO.send(sIOtype_CONNECT, "/");
+            break;
+        case sIOtype_EVENT:
+            USE_SERIAL.printf("[IOc] get event: %s\n", payload);
+            break;
+        case sIOtype_ACK:
+            USE_SERIAL.printf("[IOc] get ack: %u\n", length);
+            break;
+        case sIOtype_ERROR:
+            USE_SERIAL.printf("[IOc] get error: %u\n", length);
+            break;
+        case sIOtype_BINARY_EVENT:
+            USE_SERIAL.printf("[IOc] get binary: %u\n", length);
+            break;
+        case sIOtype_BINARY_ACK:
+            USE_SERIAL.printf("[IOc] get binary ack: %u\n", length);
+            break;
+    }
+}
+
+void setupCamera()
+{
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -124,24 +129,52 @@ void setup() {
   s->set_vflip(s, 1);
 #endif
 
-  WiFi.begin(ssid, password);
-  WiFi.setSleep(false);
-
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("");
-  Serial.println("WiFi connected");
-
-  startCameraServer();
-
-  Serial.print("Camera Ready! Use 'http://");
-  Serial.print(WiFi.localIP());
-  Serial.println("' to connect");
 }
 
+void setup(){
+  Serial.begin(115200);
+  
+  // Connect to Wi-Fi
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.println("Connecting to WiFi..");
+  }
+
+  // Print ESP32 Local IP Address
+  Serial.println(WiFi.localIP());
+
+  setupCamera();
+  
+  // server address, port and URL
+  socketIO.begin("esw.abhijnan.live", 80, "/socket.io/?EIO=4");
+  
+  // event handler
+  socketIO.onEvent(socketIOEvent);
+
+}
+
+
+unsigned long messageTimestamp = 0;
 void loop() {
-  // Do nothing. Everything is done in another task by the web server
-  delay(10000);
+    socketIO.loop();
+    uint64_t now = millis();
+
+    //can't make it fast. SocketIO keep disconnecting
+    if(now - messageTimestamp > 300) {
+        messageTimestamp = now;
+
+        camera_fb_t * fb = NULL;
+
+        // Take Picture with Camera
+        fb = esp_camera_fb_get();  
+        if(!fb) {
+          Serial.println("Camera capture failed");
+          return;
+        }
+        
+        socketIO.sendBIN(fb->buf,fb->len);
+        Serial.println("Image sent");
+        esp_camera_fb_return(fb); 
+    }
 }
