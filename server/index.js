@@ -17,15 +17,6 @@ const io = new Server(server, {
 
 io.on('connect', (socket) => {
     console.log(`a user connected ${socket.id} ${io.engine.clientsCount}`);
-    // if (io.engine.clientsCount > connectionsLimit) {
-    //     socket.emit('err', { message: 'reach the limit of connections' })
-    //     socket.disconnect()
-    //     console.log('Disconnected...')
-    //     return
-    //   }
-    // else{
-    //     socket.emit('success', { message: 'connected' })
-    // }
 });
 
 server.listen (3001, () => {

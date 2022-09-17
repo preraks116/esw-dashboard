@@ -11,6 +11,9 @@ import io from "socket.io-client";
 import DashBoard from "./pages/Dashboard";
 import ErrorPage from "./pages/ErrorPage";
 import TestingPage from "./pages/testingpage";
+import Login from "./pages/Login"; // Written by Mavani
+import Register from "./pages/Register";
+import Reset from "./pages/Reset";
 import Specs from "./pages/Specs";
 const Final = () => {
 
@@ -18,10 +21,13 @@ const Final = () => {
     return (
         <Router>
             <Routes>
+                <Route exact path="/" element={<Login />} />
+                <Route exact path="/register" element={<Register />} />
+                <Route exact path="/reset" element={<Reset />} />
                 <Route
-                    path="/"
+                    exact path="/dashboard"
                     element={
-                        <DashBoard />
+                        <TestingPage />
                     }
                 >
                 </Route>
