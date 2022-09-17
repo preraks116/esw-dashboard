@@ -16,8 +16,9 @@ float vv = 4.9;
 char* ssid = "Harsh";
 char* pwd = "rudranshpratapsingh";
 const char* myWriteAPIKey = "95X1SMC8POQD264A";
-const char* myReadAPIKey = "PQGEZA20RGHXTE68";
-unsigned long myChannelNumber = 1825191;
+const char* myReadAPIKey = "KXTTNBBK66UCLUZO";
+unsigned long myWriteChannel = 1825191;
+unsigned long myReadChannel = 1863500;
 
 String server = "https://esw-onem2m.iiit.ac.in/~/in-cse/in-name/Team-23/Node-1/Data";
 
@@ -40,6 +41,12 @@ void setup() {
 
 void pushOnem2m(String val)
 {
+  static int last_push = millis();
+
+  if (millis() - last_push < 0)
+  {
+    return;
+  }
   HTTPClient http;
   http.begin(server);
   http.addHeader("X-M2M-Origin", "!qH#A6:WvyYXL");
@@ -50,6 +57,7 @@ void pushOnem2m(String val)
   if (code == -1)
     Serial.println("Connection failed");
   http.end();
+  last_push = millis();
 }
 
 
@@ -102,33 +110,6 @@ float getCurrent()
 
 
 void loop() {
-  
-  
-  //  Serial.println("Moving Forward");
-  //  digitalWrite(motor1Pin1, LOW);
-  //  digitalWrite(motor1Pin2, HIGH);
-  //  delay(2000);
-
-  //  // Stop the DC motor
-  //  Serial.println("Motor stopped");
-  //  digitalWrite(motor1Pin1, LOW);
-  //  digitalWrite(motor1Pin2, LOW);
-  //  delay(1000);
-
-  //  // Move DC motor backwards at maximum speed
-  //  Serial.println("Moving Backwards");
-  //  digitalWrite(motor1Pin1, HIGH);
-  //  digitalWrite(motor1Pin2, LOW);
-  //  delay(2000);
-  //
-  //  // Stop the DC motor
-  //  Serial.println("Motor stopped");
-  //  digitalWrite(motor1Pin1, LOW);
-  //  digitalWrite(motor1Pin2, LOW);
-  //  delay(1000);
-
-
-
   // Move DC motor forward with increasing speed
   if (WiFi.status() != WL_CONNECTED) {
     Serial.print("Attempting to connect to SSID: ");
@@ -140,17 +121,12 @@ void loop() {
     }
     Serial.println("\nConnected.");
   }
-  vv=vv+ 0.1;
-  if(vv > 7){
-    vv = 4.9;
-  }
-  // float voltage = ThingSpeak.readFloatField(myChannelNumber,4,myReadAPIKey);
-   dutyCycle = 255*vv/7;
+
+   int dutyCycle = ThingSpeak.readIntField(myReadChannel,1,myReadAPIKey);
   
   digitalWrite(motor1Pin1, HIGH);
   digitalWrite(motor1Pin2, LOW);
 
-//  for (dutyCycle = 180; dutyCycle <= 255 ; dutyCycle += 5) {
     ledcWrite(pwmChannel, dutyCycle);
     float curr = getCurrent();
     float rps = getRPS();
@@ -165,7 +141,7 @@ void loop() {
     ThingSpeak.setField(3, dutyCycle);
     pushOnem2m(String("["+String(rps)+","+String(curr)+","+String(dutyCycle)+"]"));
 
-    int x = ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
+    int x = ThingSpeak.writeFields(myWriteChannel, myWriteAPIKey);
     if (x == 200) {
       Serial.println("Channel update successful.");
     }
