@@ -13,18 +13,19 @@ import BoltIcon from "@mui/icons-material/Bolt";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MuiInput from "@mui/material/Input";
 import Grid from "@mui/material/Grid";
+import { logout } from "../firebase";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import io from "socket.io-client";
 import Canvas from "../components/Canvas";
-
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 const Input = styled(MuiInput)`
   width: 42px;
 `;
 
 // make data cl
 const channelid = "1825191";
-const readAPIKey = "XVYQYXZQYXZQYXZQ";
+const readAPIKey = "PQGEZA20RGHXTE68";
 const stats = {
   lastTime: "",
   rps: {
@@ -78,43 +79,13 @@ const voltage = {
   },
 };
 
-function getStats(data) {
-  const mean = data.ylist.reduce((a, b) => a + b) / data.ylist.length;
-  const median = data.ylist[Math.floor(data.length / 2)];
-  const std = Math.sqrt(
-    data.ylist.reduce((a, b) => a + Math.pow(b - mean, 2)) / data.length
-  );
-  // return {mean, median, mode, std};
-  data.stats = {
-    mean: mean,
-    median: median,
-    std: std,
-  };
-}
-
-function addVoltage(value) {
-  const y = value;
-  voltage.ylist = [...voltage.ylist, y];
-  voltage.length++;
-  voltage.xlist = [...voltage.xlist, voltage.length];
-}
-
-function addValue(data) {
-  const y = Math.random() * 100;
-  data.ylist = [...data.ylist, y];
-  data.length++;
-  data.xlist = [...data.xlist, data.length];
-}
 
 function addStats(data, field) {
   if (field === "rps") {
     stats.rps.val = [...stats.rps.val, data];
     stats.rps.xlist = [...stats.rps.xlist, stats.rps.val.length];
     const rpslength = stats.rps.val.length;
-    // console.log("rpslength is", rpslength);
-    // console.log("sum of all elements in the array is",stats.rps.val.reduce((a, b) => a + b));
     const mean = stats.rps.val.reduce((a, b) => a + b) / stats.rps.val.length;
-    // console.log("mean is", mean);
     const median = stats.rps.val[Math.floor(rpslength / 2)];
     const std = Math.sqrt(
       stats.rps.val.reduce((a, b) => a + Math.pow(b - mean, 2)) / rpslength
@@ -134,7 +105,7 @@ function addStats(data, field) {
     const median = stats.voltage.val[Math.floor(voltagelength / 2)];
     const std = Math.sqrt(
       stats.voltage.val.reduce((a, b) => a + Math.pow(b - mean, 2)) /
-        voltagelength
+      voltagelength
     );
     stats.voltage.measure = {
       mean: mean,
@@ -154,7 +125,7 @@ function addStats(data, field) {
     const median = stats.dutyCycle.val[Math.floor(dutyCyclelength / 2)];
     const std = Math.sqrt(
       stats.dutyCycle.val.reduce((a, b) => a + Math.pow(b - mean, 2)) /
-        dutyCyclelength
+      dutyCyclelength
     );
     stats.dutyCycle.measure = {
       mean: mean,
@@ -167,6 +138,16 @@ const socket = io("http://localhost:3001");
 console.log("socket is", socket);
 
 function DashBoard() {
+
+
+  onAuthStateChanged(getAuth(), (user) => {
+    if (user) {
+      console.log("user is", user);
+    } else {
+      console.log("user is not logged in");
+      window.location.href = "/";
+    }
+  });
   useEffect(() => {
     setTimeout(() => {
       console.log("checking connection socket");
@@ -183,13 +164,27 @@ function DashBoard() {
   const [voltageValue, setVoltage] = useState(5);
 
   const [value, setValue] = React.useState(30);
+  const [disabled, setDisabled] = React.useState(false);
+
+  const handleValueChange = () => {
+    console.log("sending shit");
+    setTimeout(() => {
+      socket.emit("dutyCycle", value);
+    }, 1000);
+    setDisabled(true);
+    setTimeout(() => {
+      setDisabled(false);
+    }, 10 * 1000);
+  }
 
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
+    handleValueChange();
   };
 
   const handleInputChange = (event) => {
     setValue(event.target.value === "" ? "" : Number(event.target.value));
+    handleValueChange();
   };
 
   const handleBlur = () => {
@@ -199,19 +194,24 @@ function DashBoard() {
       setValue(100);
     }
   };
+  useEffect(() => {
+    setTimeout(() => {
+      logout();
+      alert("Session Timed Out")
+      window.location.href = "/";
+    }, 60000);
+  }, [])
 
   useEffect(() => {
     //fetch from the thingspeak API every 10 secs
     setInterval(() => {
       axios
-        .get(`https://api.thingspeak.com/channels/${channelid}/feed/last.json`)
+        .get(`https://api.thingspeak.com/channels/${channelid}/feed/last.json?api_key=${readAPIKey}`)
         .then((res) => {
           const rpm = Number(res.data.field1);
           const voltage = Number(res.data.field2);
           const dutyCycle = Number(res.data.field3);
           const lastTime = res.data.created_at;
-          console.log("rpm", rpm);
-          console.log("voltage", voltage);
           if (lastTime !== stats.lastTime) {
             addStats(rpm, "rps");
             addStats(voltage, "voltage");
@@ -223,7 +223,7 @@ function DashBoard() {
           console.log(err);
         });
       setSettings((settings) => settings + 1);
-    }, 1000);
+    }, 10 * 1000);
   }, []);
 
   return (
@@ -239,7 +239,7 @@ function DashBoard() {
             >
               ESW DashBoard
             </Typography>
-            <Button color="inherit" onClick={() => {}}>
+            <Button color="inherit" onClick={() => { }}>
               Plots
             </Button>
             <Button
@@ -298,6 +298,7 @@ function DashBoard() {
                     value={typeof value === "number" ? value : 0}
                     onChange={handleSliderChange}
                     aria-labelledby="input-slider"
+                    disabled={disabled}
                   />
                 </Grid>
                 <Grid item>
@@ -318,6 +319,7 @@ function DashBoard() {
                       type: "number",
                       "aria-labelledby": "input-slider",
                     }}
+                    disabled={disabled}
                   />
                 </Grid>
               </Grid>
