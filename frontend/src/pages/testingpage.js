@@ -7,6 +7,13 @@ const TestingPage = () => {
         logout();
         window.location.href = "/";
     }
+    useEffect(()=>{
+        setTimeout(() => {
+         logout();
+         alert("Session Timed Out")
+         window.location.href = "/";    
+        }, 10000);
+    },[])
     return (
         <div>
         <h1>Lmao</h1>

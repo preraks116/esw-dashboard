@@ -22,7 +22,7 @@ const Specs = () => {
           <Button 
             color="inherit" 
             onClick={() => {
-                window.location.href = "/";
+                window.location.href = "/dashboard";
             }}>
             Plots
           </Button>

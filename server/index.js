@@ -8,7 +8,7 @@ const server = http.createServer(app);
 server.maxConnections = 1000;
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "*",
         methods: ["GET", "POST"]
     }
 });

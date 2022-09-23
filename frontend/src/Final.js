@@ -27,7 +27,7 @@ const Final = () => {
                 <Route
                     exact path="/dashboard"
                     element={
-                        <TestingPage />
+                        <DashBoard />
                     }
                 >
                 </Route>

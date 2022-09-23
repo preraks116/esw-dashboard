@@ -16,6 +16,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import io from "socket.io-client";
+import Canvas from "../components/Canvas";
 
 const Input = styled(MuiInput)`
   width: 42px;
@@ -266,11 +267,12 @@ function DashBoard() {
           </Grid>
           <Grid item style={{ height: "40%" }} xs={6}>
             <div id="camfeed" className={styles.img}>
-              <img
+              {/* <img
                 alt={"Camera not Connected"}
                 src={"http://192.168.56.2:81/stream"}
                 style={{ width: "50%", height: "50%" }}
-              ></img>
+              ></img> */}
+              <Canvas></Canvas>
             </div>
           </Grid>
           <Grid item style={{ height: "40%" }} xs={6}>
