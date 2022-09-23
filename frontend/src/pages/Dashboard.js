@@ -1,23 +1,22 @@
-import React, { useState, useEffect, startTransition } from "react";
+import React, { useState, useEffect, useRef, startTransition } from "react";
 import { styled } from "@mui/material/styles";
-import Graph from "./Graph";
-import Stats from "./Stats";
-import styles from "./style.module.css";
+import Graph from "../components/Graph";
+import Stats from "../components/Stats";
+import styles from "../components/style.module.css";
 import axios from "axios";
 import { Col, Row } from "antd";
 import Slider from "@mui/material/Slider";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import { Button } from "@mui/material";
 import BoltIcon from "@mui/icons-material/Bolt";
-import Typography from "@mui/material/Typography";
-// import Button from '@mui/material/Button';
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Toolbar from "@mui/material/Toolbar";
 import MuiInput from "@mui/material/Input";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
+import io from "socket.io-client";
+import Canvas from "../components/Canvas";
 
 const Input = styled(MuiInput)`
   width: 42px;
@@ -164,8 +163,22 @@ function addStats(data, field) {
     };
   }
 }
+const socket = io("http://localhost:3001");
+console.log("socket is", socket);
 
-function App() {
+function DashBoard() {
+  useEffect(() => {
+    setTimeout(() => {
+      console.log("checking connection socket");
+      if (socket.connected) {
+        console.log("socket is connected");
+      } else {
+        console.log("socket not connected");
+        window.location.href = "/error";
+      }
+    }, 2000);
+  }, []);
+
   const [settings, setSettings] = useState(0);
   const [voltageValue, setVoltage] = useState(5);
 
@@ -197,6 +210,8 @@ function App() {
           const voltage = Number(res.data.field2);
           const dutyCycle = Number(res.data.field3);
           const lastTime = res.data.created_at;
+          console.log("rpm", rpm);
+          console.log("voltage", voltage);
           if (lastTime !== stats.lastTime) {
             addStats(rpm, "rps");
             addStats(voltage, "voltage");
@@ -207,31 +222,34 @@ function App() {
         .catch((err) => {
           console.log(err);
         });
-            setSettings(settings => settings + 1);
+      setSettings((settings) => settings + 1);
     }, 1000);
   }, []);
-
-  // useEffect(() => {
-  //   setInterval(() => {
-  //     addValue(rpm);
-  //     getStats(rpm);
-  //     // add random value between -2 and 2 to voltage
-  //     getStats(voltage);
-  //     // console.log(voltage);
-  //     // console.log(voltageValue)
-  //   }, 1000);
-  // }, []);
 
   return (
     <div className="App">
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="h5" component="div" sx={{ flexGrow: 1 }} fontFamily="Courier New">
+            <Typography
+              variant="h5"
+              component="div"
+              sx={{ flexGrow: 1 }}
+              fontFamily="Courier New"
+            >
               ESW DashBoard
             </Typography>
-            <Button color="inherit">Plots</Button>
-            <Button color="inherit">Specs</Button>
+            <Button color="inherit" onClick={() => {}}>
+              Plots
+            </Button>
+            <Button
+              color="inherit"
+              onClick={() => {
+                window.location.href = "/specs";
+              }}
+            >
+              Specs
+            </Button>
           </Toolbar>
         </AppBar>
       </Box>
@@ -249,11 +267,12 @@ function App() {
           </Grid>
           <Grid item style={{ height: "40%" }} xs={6}>
             <div id="camfeed" className={styles.img}>
-              <img
-                alt="Camera Not Connected"
-                src={"http://192.168.145.2:81/stream"}
+              {/* <img
+                alt={"Camera not Connected"}
+                src={"http://192.168.56.2:81/stream"}
                 style={{ width: "50%", height: "50%" }}
-              ></img>
+              ></img> */}
+              <Canvas></Canvas>
             </div>
           </Grid>
           <Grid item style={{ height: "40%" }} xs={6}>
@@ -310,7 +329,7 @@ function App() {
               <Graph
                 xlist={stats.dutyCycle.xlist}
                 ylist={stats.dutyCycle.val}
-                title="dutyCycle"
+                title="Duty Cycle"
               />
               <Stats stat={stats.dutyCycle} style={styles.dutyStats} />
             </div>
@@ -321,4 +340,4 @@ function App() {
   );
 }
 
-export default App;
+export default DashBoard;

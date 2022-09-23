@@ -22,6 +22,16 @@ unsigned long myReadChannel = 1863500;
 
 String server = "https://esw-onem2m.iiit.ac.in/~/in-cse/in-name/Team-23/Node-1/Data";
 
+struct Data {
+  float rps, current;
+  int dutyCycle;
+  unsigned int t;
+};
+
+const int DataBufferLen = 15;
+struct Data DataBuffer[DataBufferLen];
+int DataLen = 0; 
+
 WiFiClient client;
 
 void setup() {
@@ -38,6 +48,43 @@ void setup() {
   WiFi.mode(WIFI_STA);
   ThingSpeak.begin(client);  // Initialize ThingSpeak
 }
+
+void pushThingspeak(){
+  unsigned int push_time = millis()-1;
+  
+  if (DataLen < DataBufferLen){
+    return;
+  }
+
+  String json = "[";
+  for (int  i = 0; i < DataBufferLen; i++) {
+    if (i != 0) {
+      json += ",";
+    }
+
+    json += "{\"delta_t\":" + String((push_time - DataBuffer[i].t)/1000) + ",\"field1\":" + String(DataBuffer[i].rps) + 
+    ",\"field2\":" + String(DataBuffer[i].current) + ",\"field3\":" + String(DataBuffer[i].dutyCycle) + "}";
+  }
+  json += "]";
+
+  Serial.println("Pushing data to Thingspeak");
+  Serial.println(json);
+
+  char TSserver[] = "https://api.thingspeak.com/channels/1825191/bulk_update.json";
+  HTTPClient http;
+  http.begin(TSserver);
+  http.addHeader("Content-Type","application/json");
+  int code = http.POST("{\"write_api_key\":\"95X1SMC8POQD264A\",\"updates\":" + json + "}");
+  Serial.println("Code returned : " + String(code));
+  if (code == -1)
+  {
+    Serial.println("Connection failed");
+    return;
+  }
+  http.end();
+  DataLen = 0;
+}
+
 
 void pushOnem2m(String val)
 {
@@ -67,14 +114,9 @@ float getRPS() {
   float Rota = 0;
   unsigned long enTime = stTime + 1000;
   while (millis() < enTime) {
-    //       Serial.println(digitalRead(Rpmsensor));
-
-    //    Serial.println(Rota);
     if (digitalRead(Rpmsensor))  {
       Rota += 1;
-      //        Serial.println(digitalRead(Rpmsensor));
       while (digitalRead(Rpmsensor));
-      //        Serial.println(digitalRead(Rpmsensor));
 
     }
   }
@@ -90,16 +132,10 @@ float getCurrent()
   float resultCurr;
   for (int i = 0; i < 1000; i++) {
     resultVol += (analogRead(sensorIn));
-    //      resultCurr = analogRead(sensorIn);
-    //      resultVol+=resultCurr;
-    //    Serial.println(resultCurr);
-    //    Serial.println(resultVol);
     delay(1);
   }
   Serial.println(resultVol);
 
-  //  resultVol /=1000;
-  //  resultVol *= (5/4096);
   resultVol = (resultVol / 1000) * 5 / 4096;
   Serial.println(resultVol);
   resultCurr = (resultVol-3.3) / 0.1;
@@ -136,29 +172,30 @@ void loop() {
     Serial.println(curr);
     Serial.print("Rotations per sec = ");
     Serial.println(rps);
-    ThingSpeak.setField(1, rps);
-    ThingSpeak.setField(2, curr);
-    ThingSpeak.setField(3, dutyCycle);
-    pushOnem2m(String("["+String(rps)+","+String(curr)+","+String(dutyCycle)+"]"));
 
-    int x = ThingSpeak.writeFields(myWriteChannel, myWriteAPIKey);
-    if (x == 200) {
-      Serial.println("Channel update successful.");
-    }
-    else {
-      Serial.println("Problem updating channel. HTTP error code " + String(x));
-    }
+    DataBuffer[DataLen].rps = rps;
+    DataBuffer[DataLen].current = curr;
+    DataBuffer[DataLen].dutyCycle = dutyCycle;
+    DataBuffer[DataLen].t = millis();
+
+    DataLen++;
+
+    pushThingspeak();
+    
+//    ThingSpeak.setField(1, rps);
+//    ThingSpeak.setField(2, curr);
+//    ThingSpeak.setField(3, dutyCycle);
+//    pushOnem2m(String("["+String(rps)+","+String(curr)+","+String(dutyCycle)+"]"));
+
+//    int x = ThingSpeak.writeFields(myWriteChannel, myWriteAPIKey);
+//    if (x == 200) {
+//      Serial.println("Channel update successful.");
+//    }
+//    else {
+//      Serial.println("Problem updating channel. HTTP error code " + String(x));
+//    }
 
     Serial.println("---------------------------------------------");
 
-//  }
-  //  while (dutyCycle <= 255){
-  //    ledcWrite(pwmChannel, dutyCycle);
-  //    Serial.print("Forward with duty cycle: ");
-  //    Serial.println(dutyCycle);
-  //    dutyCycle = dutyCycle + 5;
-  //    delay(500);
-  //  }
-  //  dutyCycle = 200;
-  delay(15 * 1000);
+  delay(1 * 1000);
 }
