@@ -103,7 +103,7 @@ export const TrafficByDevice = (props) => {
             data={data}
             options={options}
           /> */}
-          <Canvas></Canvas>
+          <Canvas/>
         </Box>
         <Box
           sx={{
