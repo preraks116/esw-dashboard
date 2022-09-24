@@ -199,7 +199,7 @@ function DashBoard() {
       logout();
       alert("Session Timed Out")
       window.location.href = "/";
-    }, 60000);
+    }, 300000);
   }, [])
   
 
