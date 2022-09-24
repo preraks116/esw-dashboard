@@ -142,10 +142,12 @@ function addStats(data, field) {
 }
 
 
-const socket = io("http://dcb.abhijnan.live");
-console.log("socket is", socket);
-
+let socket=null
 function Page() {
+  useEffect(()=>{
+     socket = io("http://dcb.abhijnan.live");
+    console.log("socket is", socket);
+  },[])
 
 
   onAuthStateChanged(getAuth(), (user) => {
@@ -320,7 +322,7 @@ function Page() {
             xl={7}
             xs={12}
           >
-            <Sales
+            <ScatterPlot
               xlist={stats.voltage.val}
               ylist={stats.rps.val}
               xtitle="Voltage"
@@ -334,7 +336,7 @@ function Page() {
             xl={6}
             xs={12}
           >
-            <Sales
+            <ScatterPlot
               xlist={stats.current.val}
               ylist={stats.rps.val}
               xtitle="Current"

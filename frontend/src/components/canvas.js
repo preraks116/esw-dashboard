@@ -2,12 +2,12 @@
 import React, { useRef, useEffect,useState } from 'react'
 import io from "socket.io-client";
 
-const socket = io("esw.abhijnan.live");
 const Canvas = props => {
     
     const [state,setState] = useState(null);
     const canvasRef = useRef(null)
     useEffect(() => {
+        const socket = io("http://esw.abhijnan.live");
         const canvas = canvasRef.current
         const context = canvas.getContext('2d')
         //Our first draw
