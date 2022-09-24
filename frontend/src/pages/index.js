@@ -18,6 +18,7 @@ import BoltIcon from '@mui/icons-material/Bolt';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import {getAuth, onAuthStateChanged} from "firebase/auth";
 import Router from 'next/router';
+import { ScatterPlot } from '../components/dashboard/ScatterPlot';
 import { logout } from "../firebase";
 
 const channelid = "1825191";
@@ -25,8 +26,8 @@ const readAPIKey = "PQGEZA20RGHXTE68";
 const stats = {
   lastTime: "",
   rps: {
-    val: [2,3,5,4,3,7,6,5.6],
-    xlist: [1,2,3,4,5,6,7,8],
+    val: [],
+    xlist: [],
     measure: {
       mean: 0,
       median: 0,
@@ -34,8 +35,8 @@ const stats = {
     },
   },
   voltage: {
-    val: [3,3.3,3.7,5,6,7,8,9,10.1],
-    xlist: [1,2,3,4,5,6,7,8],
+    val: [],
+    xlist: [],
     measure: {
       mean: 0,
       median: 0,
@@ -43,8 +44,8 @@ const stats = {
     },
   },
   current: {
-    val: [0.01,0.02,0.03,0.04, 0.3, 0.44, 0.5],
-    xlist: [1,2,3,4,5,6,7,8],
+    val: [],
+    xlist: [],
     measure: {
       mean: 0,
       median: 0,
@@ -52,8 +53,8 @@ const stats = {
     }
   },
   dutyCycle: {
-    val: [0,0,0,0,170,210,240,255],
-    xlist: [1,2,3,4,5,6,7,8],
+    val: [],
+    xlist: [],
     measure: {
       mean: 0,
       median: 0,
@@ -78,6 +79,24 @@ function addStats(data, field) {
       stats.rps.val.reduce((a, b) => a + Math.pow(b - mean, 2)) / rpslength
     );
     stats.rps.measure = {
+      mean: mean,
+      median: median,
+      std: std,
+    };
+  }
+  if (field === "current") {
+    stats.current.val = [...stats.current.val, data];
+    stats.current.xlist = [...stats.current.xlist, stats.current.val.length];
+    const currentlength = stats.current.val.length;
+    // console.log("currentlength is", currentlength);
+    // console.log("sum of all elements in the array is",stats.current.val.reduce((a, b) => a + b));
+    const mean = stats.current.val.reduce((a, b) => a + b) / stats.current.val.length;
+    // console.log("mean is", mean);
+    const median = stats.current.val[Math.floor(currentlength / 2)];
+    const std = Math.sqrt(
+      stats.current.val.reduce((a, b) => a + Math.pow(b - mean, 2)) / currentlength
+    );
+    stats.current.measure = {
       mean: mean,
       median: median,
       std: std,
@@ -175,17 +194,27 @@ function Page() {
     //fetch from the thingspeak API every 10 secs
     setInterval(() => {
       axios
-        .get(`https://api.thingspeak.com/channels/${channelid}/feed/last.json?api_key=${readAPIKey}`)
+        .get(`https://api.thingspeak.com/channels/${channelid}/feeds.json?api_key=${readAPIKey}&&results=15`)
         .then((res) => {
-          const rpm = Number(res.data.field1);
-          const voltage = Number(res.data.field2);
-          const dutyCycle = Number(res.data.field3);
-          const lastTime = res.data.created_at;
-          if (lastTime !== stats.lastTime) {
-            addStats(rpm, "rps");
-            addStats((dutyCycle*100)/250, "voltage");
-            addStats(dutyCycle, "dutyCycle");
-            stats.lastTime = lastTime;
+          console.log("res is ",res);
+          //traverse through res.data.feeds array
+          // check if the latest entry timestamp is more recent than stats.lastTime
+          var num_results = res.data.feeds.length;
+          if ( res.data.feeds[num_results-1].created_at !== stats.lastTime)
+          {
+            console.log("values upated on ThingSpeak channel")
+            for ( var i = 0 ; i < num_results ;i++)
+            {
+              const rpm = Number(res.data.feeds[i].field1);
+
+              const current = Number(res.data.feeds[i].field2);
+              const dutyCycle = Number(res.data.feeds[i].field3);
+              stats.lastTime = res.data.feeds[num_results-1].created_at;
+              addStats(rpm, "rps");
+              addStats(dutyCycle*9/255,"voltage");
+              addStats(current, "current");
+              addStats(dutyCycle, "dutyCycle");
+            }
           }
         })
         .catch((err) => {
@@ -294,7 +323,7 @@ function Page() {
             <Sales
               xlist={stats.voltage.val}
               ylist={stats.rps.val}
-              xtitle="Duty Cycle"
+              xtitle="Voltage"
               ytitle="RPS"
             />
           </Grid>
@@ -319,12 +348,6 @@ function Page() {
             xl={6}
             xs={12}
           >
-            <Sales
-              xlist={stats.dutyCycle.val}
-              ylist={stats.current.val}
-              xtitle="Duty Cycle"
-              ytitle="Current"
-            />
           </Grid>
           <Grid
             item
@@ -334,9 +357,9 @@ function Page() {
             xs={12}
           >
             <Sales2
-              xlist={stats.voltage.xlist}
-              ylist={stats.voltage.val}
-              val={stats.voltage}
+              xlist={stats.current.xlist}
+              ylist={stats.current.val}
+              val={stats.current}
               xtitle="Time"
               ytitle="Current"
             />
