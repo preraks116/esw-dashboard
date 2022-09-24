@@ -142,11 +142,11 @@ function addStats(data, field) {
 }
 
 
+const socket = io("http://dcb.abhijnan.live");
+console.log("socket is", socket);
 
 function Page() {
 
-  const socket = io("http://dcb.abhijnan.live");
-  console.log("socket is", socket);
 
   onAuthStateChanged(getAuth(), (user) => {
     if (user) {
@@ -157,17 +157,17 @@ function Page() {
     }
   });
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     console.log("checking connection socket");
-  //     if (socket.connected) {
-  //       console.log("socket is connected");
-  //     } else {
-  //       console.log("socket not connected");
-  //       window.location.href = "/error";
-  //     }
-  //   }, 2000);
-  // }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      console.log("checking connection socket");
+      if (socket.connected) {
+        console.log("socket is connected");
+      } else {
+        console.log("socket not connected");
+        Router.push('/error');
+      }
+    }, 2000);
+  }, []);
 
   const [settings, setSettings] = useState(0);
   const [disabled, setDisabled] = useState(false);
@@ -182,13 +182,13 @@ function Page() {
     }, 10 * 1000);
   }
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     logout();
-  //     alert("Session Timed Out")
-  //     window.location.href = "/";
-  //   }, 10*60*1000);
-  // }, [])
+  useEffect(() => {
+    setTimeout(() => {
+      logout();
+      alert("Session Timed Out")
+      Router.push('/timeout');
+    }, 10*60*1000);
+  }, [])
 
   useEffect(() => {
     //fetch from the thingspeak API every 10 secs
