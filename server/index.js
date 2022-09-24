@@ -5,7 +5,7 @@ const axios = require('axios');
 const http = require("http");
 const {Server} = require("socket.io");
 const server = http.createServer(app);
-server.maxConnections = 2;
+server.maxConnections = 1000;
 const io = new Server(server, {
     cors: {
         origin: "*",

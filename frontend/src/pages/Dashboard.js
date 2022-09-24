@@ -201,29 +201,41 @@ function DashBoard() {
       window.location.href = "/";
     }, 60000);
   }, [])
+  
 
   useEffect(() => {
     //fetch from the thingspeak API every 10 secs
     setInterval(() => {
       axios
-        .get(`https://api.thingspeak.com/channels/${channelid}/feed/last.json?api_key=${readAPIKey}`)
+        .get(`https://api.thingspeak.com/channels/${channelid}/feeds.json?api_key=${readAPIKey}&&results=15`)
         .then((res) => {
-          const rpm = Number(res.data.field1);
-          const voltage = Number(res.data.field2);
-          const dutyCycle = Number(res.data.field3);
-          const lastTime = res.data.created_at;
-          if (lastTime !== stats.lastTime) {
-            addStats(rpm, "rps");
-            addStats(voltage, "voltage");
-            addStats(dutyCycle, "dutyCycle");
-            stats.lastTime = lastTime;
+          console.log("res is ",res);
+          //traverse through res.data.feeds array
+          // check if the latest entry timestamp is more recent than stats.lastTime
+          var num_results = res.data.feeds.length;
+          if ( res.data.feeds[num_results-1].created_at !== stats.lastTime)
+          {
+            console.log("values upated on ThingSpeak channel")
+            for ( var i = 0 ; i < num_results ;i++)
+            {
+              const rpm = Number(res.data.feeds[i].field1);
+              const voltage = Number(res.data.feeds[i].field2);
+              const dutyCycle = Number(res.data.feeds[i].field3);
+              stats.lastTime = res.data.feeds[num_results-1].created_at;
+              addStats(rpm, "rps");
+              addStats(voltage, "voltage");
+              addStats(dutyCycle, "dutyCycle");
+            }
+          } 
+          else {
+            console.log("not updated yet")
           }
         })
         .catch((err) => {
           console.log(err);
         });
       setSettings((settings) => settings + 1);
-    }, 10 * 1000);
+    }, 1000);
   }, []);
 
   return (
