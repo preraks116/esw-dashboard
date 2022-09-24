@@ -17,7 +17,7 @@ import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import io from "socket.io-client";
 import Canvas from "../components/Canvas";
-
+import { logout } from "../firebase";
 const Input = styled(MuiInput)`
   width: 42px;
 `;
@@ -199,7 +199,13 @@ function DashBoard() {
       setValue(100);
     }
   };
-
+    useEffect(()=>{
+        setTimeout(() => {
+         logout();
+         alert("Session Timed Out")
+         window.location.href = "/";    
+        }, 300000);
+    },[])
   useEffect(() => {
     //fetch from the thingspeak API every 10 secs
     setInterval(() => {
@@ -223,7 +229,7 @@ function DashBoard() {
           console.log(err);
         });
       setSettings((settings) => settings + 1);
-    }, 1000);
+    }, 10000);
   }, []);
 
   return (
