@@ -1,70 +1,126 @@
-# Getting Started with Create React App
+## [Material Kit - React](https://material-kit-react.devias.io/) [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?text=%F0%9F%9A%A8Devias%20Freebie%20Alert%20-%20An%20awesome%20ready-to-use%20register%20page%20made%20with%20%23material%20%23react%0D%0Ahttps%3A%2F%2Fdevias.io%20%23createreactapp%20%23devias%20%23material%20%23freebie%20%40devias-io)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![license](https://img.shields.io/badge/license-MIT-blue.svg)
 
-## Available Scripts
+[![Material Kit - React](https://github.com/devias-io/material-kit-react/blob/main/public/static/thumbnail.png)](https://material-kit-react.devias.io/)
 
-In the project directory, you can run:
+> Free React Admin Dashboard made with [MUI's](https://mui.com/?ref=devias-io)
+> components, [React](https://reactjs.org/?ref=devias-io) and of
+> course [Next.js](https://github.com/vercel/next.js/?ref=devias-io) to boost your app development
+> process!
 
-### `npm start`
+## Demo
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- [Dashboard Page](https://material-kit-react.devias.io)
+- [Users Page](https://material-kit-react.devias.io/customers)
+- [Products Page](https://material-kit-react.devias.io/products)
+- [Register Page](https://material-kit-react.devias.io/register)
+- [Login Page](https://material-kit-react.devias.io/login)
+- [Account Page](https://material-kit-react.devias.io/account)
+- [Settings Page](https://material-kit-react.devias.io/settings)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Free Figma Community File
 
-### `npm test`
+- [Duplicate File](https://www.figma.com/community/file/1039837897183395483/Devias-Dashboard-Design-Library-Kit)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Upgrade to PRO Version
 
-### `npm run build`
+We also have a pro version of this product which bundles even more pages and components if you want
+to save more time and design efforts :)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Free Version (this one)          | [Material Kit Pro - React](https://material-ui.com/store/items/devias-kit-pro/) |
+|----------------------------------| :----------------------------------------------------------- |
+| **9** Demo Pages                 | **40+** demo pages
+| ✔ Authentication with **Zalter** | ✔ Authentication with **Amplify**, **Auth0**, **JWT** and **Firebase**
+| -                                | ✔ Dark & light mode
+| -                                | ✔ TypeScript version - for Standard Plus and Extended license
+| -                                | ✔ Design files (sketch & figma) - for Standard Plus and Extended license
+| -                                | ✔ Complete users flows
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Quick start
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- [Download from Github](https://github.com/devias-io/material-kit-react/archive/master.zip)
+  or [Download from Devias](https://devias.io/products/material-kit-react) or clone the
+  repo: `git clone https://github.com/devias-io/material-kit-react.git`
 
-### `npm run eject`
+- Make sure your Node.js and npm versions are up to date for `React 18`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- Install dependencies: `npm install` or `yarn`
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Start the server: `npm run dev` or `yarn dev`
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- Views are on: `localhost:3000`
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Setup authentication (optional)
 
-## Learn More
+1. Sign in on **Zalter Dashboard** (https://dashboard.zalter.com) and create your **Zalter project**.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+2. Open your project settings and activate **Email Magic Link** authentication.
+This authentication method requires `redirect URIs` setup, so while in development you need to add `http://localhost:3000/sign-in/confirm`.
+For production replace `localhost:3000` with your own domain.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3. Copy `.env.example` file and rename it to `.env`
 
-### Code Splitting
+4. Open `.env` file and enable the Zalter authentication, then set your own Zalter project ID.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```bash
+NEXT_PUBLIC_ENABLE_ZALTER_AUTH="true"
+NEXT_PUBLIC_ZALTER_PROJECT_ID="<your-project-id>"
+```
 
-### Analyzing the Bundle Size
+For more information about Zalter Authentication access https://developer.zalter.com.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## File Structure
 
-### Making a Progressive Web App
+Within the download you'll find the following directories and files:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+material-kit-react
 
-### Advanced Configuration
+┌── .env.example
+├── .eslintrc.json
+├── .gitignore
+├── CHANGELOG.md
+├── LICENSE.md
+├── next.config.js
+├── package.json
+├── README.md
+├── public
+└── src
+	├── __mocks__
+	├── components
+	├── icons
+	├── lib
+	├── theme
+	├── utils
+	└── pages
+		├── 404.js
+		├── _app.js
+		├── _document.js
+		├── account.js
+		├── customers.js
+		├── index.js
+		├── index.js
+		├── products.js
+		├── register.js
+		└── settings.js
+		└── sign-in
+			├── confirm.js
+			└── index.js
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## Resources
 
-### Deployment
+- More freebies like this one: <https://devias.io>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Reporting Issues:
 
-### `npm run build` fails to minify
+- [Github Issues Page](https://github.com/devias-io/react-material-dashboard/issues?ref=devias-io)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## License
+
+- Licensed under MIT (https://github.com/devias-io/react-material-dashboard/blob/master/LICENSE.md)
+
+## Contact Us
+
+- Email Us: support@deviasio.zendesk.com
